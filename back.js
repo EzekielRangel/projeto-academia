@@ -27,6 +27,16 @@ const treinosPorDia = {
     ]
 };
 
+function getStorage() {
+    return JSON.parse(localStorage.getItem('treinosSalvos')) || {};
+}
+
+function setStorage(data) {
+    localStorage.setItem('treinosSalvos', JSON.stringify(data));
+}
+
+let diaAtual = null;
+
 document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.day-btn').forEach(btn => {
@@ -35,47 +45,130 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.querySelector('.end-btn').addEventListener('click', finalizarTreino);
+    const endBtn = document.querySelector('.end-btn');
+    if (endBtn) {
+        endBtn.addEventListener('click', finalizarTreino);
+    }
 });
 
+
 function selectDay(day, button) {
+
+    diaAtual = day;
+
     document.querySelectorAll('.day-btn')
         .forEach(b => b.classList.remove('active'));
-
     button.classList.add('active');
 
     const container = document.querySelector('.treinos');
     container.innerHTML = '';
 
-    treinosPorDia[day].forEach(nome => {
+    treinosPorDia[diaAtual].forEach(nome => {
+
         const item = document.createElement('div');
         item.className = 'treino';
 
+        const storage = getStorage();
+        const dadosTreino = storage[diaAtual]?.[nome] || {};
+
         item.innerHTML = `
-            <span>${nome} - 2 series válidas</span>
-            <input type="checkbox" class="check-treino">
+            <div class="treino-header">
+                <span class="nome-treino">${nome}</span>
+                <input type="checkbox" class="check-treino">
+            </div>
+
+            <div class="treino-body">
+                <div class="field">
+                    <label>Séries</label>
+                    <input type="number" class="series" value="${dadosTreino.series || ''}">
+                </div>
+
+                <div class="field">
+                    <label>Repetições</label>
+                    <input type="number" class="reps" value="${dadosTreino.reps || ''}">
+                </div>
+
+                <div class="field">
+                    <label>Carga (kg)</label>
+                    <input type="number" class="carga" value="${dadosTreino.carga || ''}">
+                </div>
+
+                <div class="field">
+                    <label>Observações</label>
+                    <input type="text" class="obs" value="${dadosTreino.obs || ''}">
+                </div>
+            </div>
         `;
 
-        item.querySelector('input').addEventListener('change', e => {
-            item.classList.toggle('done', e.target.checked);
+        const checkbox = item.querySelector('.check-treino');
+        const header = item.querySelector('.treino-header');
+
+        if (dadosTreino.done) {
+            checkbox.checked = true;
+            item.classList.add('done');
+        }
+
+        header.addEventListener('click', (e) => {
+            if (e.target.classList.contains('check-treino')) return;
+            item.classList.toggle('open');
+        });
+
+        item.querySelectorAll('.series, .reps, .carga, .obs').forEach(input => {
+            input.addEventListener('input', () => salvarTreino(item, nome, checkbox));
+        });
+
+        checkbox.addEventListener('change', () => {
+            item.classList.toggle('done', checkbox.checked);
+            salvarTreino(item, nome, checkbox);
         });
 
         container.appendChild(item);
     });
 }
 
-function finalizarTreino() {
-    const feitos = document.querySelectorAll('.check-treino:checked').length;
+function salvarTreino(item, nome, checkbox) {
 
-    if (feitos === 0) {
-        alert('tu nem treino e quer terminar meu');
+    if (!diaAtual) return;
+
+    const storage = getStorage();
+    if (!storage[diaAtual]) storage[diaAtual] = {};
+
+    storage[diaAtual][nome] = {
+        series: item.querySelector('.series').value,
+        reps: item.querySelector('.reps').value,
+        carga: item.querySelector('.carga').value,
+        obs: item.querySelector('.obs').value,
+        done: checkbox.checked
+    };
+
+    setStorage(storage);
+}
+
+function finalizarTreino() {
+
+    if (!diaAtual) {
+        alert('seleciona um dia primeiro');
         return;
     }
 
-    alert(`vamooo dale, é us guri!!! \nExercícios feitos: ${feitos}`);
+    const container = document.querySelector('.treinos');
+    const checks = container.querySelectorAll('.check-treino:checked');
 
-    document.querySelectorAll('.check-treino').forEach(cb => {
+    if (checks.length === 0) {
+        alert('tu nem treinou e quer finalizar 😡');
+        return;
+    }
+
+    alert(`vamooo dale 💪🔥\nExercícios feitos: ${checks.length}`);
+
+    /* limpar UI */
+    container.querySelectorAll('.check-treino').forEach(cb => {
         cb.checked = false;
         cb.closest('.treino').classList.remove('done');
     });
+
+    /* limpar storage do dia */
+    const storage = getStorage();
+    delete storage[diaAtual];
+    setStorage(storage);
 }
