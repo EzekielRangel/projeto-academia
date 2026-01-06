@@ -152,22 +152,22 @@ function finalizarTreino() {
     }
 
     const container = document.querySelector('.treinos');
-    const checks = container.querySelectorAll('.check-treino:checked');
+    const checks = container.querySelectorAll('.check-treino');
 
-    if (checks.length === 0) {
-        alert('tu nem treinou e quer finalizar 😡');
+    const allMarked = checks.length > 0 && Array.from(checks).every(cb => cb.checked);
+
+    if (checks.length === 0 || !allMarked ) {
+        alert('Ou treina tudo, ou nem treina né o merda');
         return;
     }
 
-    alert(`vamooo dale 💪🔥\nExercícios feitos: ${checks.length}`);
+    alert(`vamooo dale`);
 
-    /* limpar UI */
     container.querySelectorAll('.check-treino').forEach(cb => {
         cb.checked = false;
         cb.closest('.treino').classList.remove('done');
     });
 
-    /* limpar storage do dia */
     const storage = getStorage();
     delete storage[diaAtual];
     setStorage(storage);
