@@ -3,16 +3,16 @@ const treinosPorDia = {
         'Francês banco', 'Lateral polia', 'Posterior voador',
         'Rosca beresian', 'Tríceps em pé', 'Bíceps barra W polia'
     ],
-    terca: ['HOJE TU DESCANSO'],
+    terca: ['HOJE TU DESCANSA'],
     quarta: [
-        'Panturrilha sentado', 'Panturrilha em pé',
-        'Mesa flexora', 'Cadeira flexora',
-        'Leg press / Agachamento', 'Extensora', 'Abdutora'
-    ],
-    quinta: [
         'Supino reto halter', 'Supino inclinado máquina',
         'Cross polia alta', 'Puxada alta',
         'Pull around', 'Remada T'
+    ],
+    quinta: [
+        'Panturrilha sentado', 'Panturrilha em pé',
+        'Mesa flexora', 'Cadeira flexora',
+        'Leg press / Agachamento', 'Extensora', 'Abdutora'
     ],
     sexta: [
         'Francês banco', 'Bíceps barra W polia',
