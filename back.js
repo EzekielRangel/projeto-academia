@@ -1,11 +1,12 @@
 const treinosPorDia = {
     segunda: [
-        'Francês banco', 'Lateral polia', 'Posterior voador',
-        'Rosca beresian', 'Tríceps em pé', 'Bíceps barra W polia'
+        'Francês na corda', 'Lateral polia', 'Posterior voador peck',
+        'Rosca beresian', 'Tríceps em pé na corda', 'Bíceps barra W polia',
+        'Antebraço em pé na barra'
     ],
     terca: ['HOJE TU DESCANSA'],
     quarta: [
-        'Supino reto halter', 'Supino inclinado máquina',
+        'Supino reto halter/maquina', 'Supino inclinado máquina',
         'Cross polia alta', 'Puxada alta',
         'Pull around', 'Remada T'
     ],
@@ -18,7 +19,7 @@ const treinosPorDia = {
         'Francês banco', 'Bíceps barra W polia',
         'Pull around', 'Remada T',
         'Supino reto halter', 'Crossover polia alta',
-        'Lateral polia', 'Posterior voador'
+        'Lateral polia', 'Posterior voador', 'Antebraço em pé na barra'
     ],
     sabado: [
         'Panturrilha sentado', 'Panturrilha em pé',
@@ -156,7 +157,7 @@ function finalizarTreino() {
 
     const allMarked = checks.length > 0 && Array.from(checks).every(cb => cb.checked);
 
-    if (checks.length === 0 || !allMarked ) {
+    if (checks.length === 0 || !allMarked) {
         alert('Ou treina tudo, ou nem treina né o merda');
         return;
     }
